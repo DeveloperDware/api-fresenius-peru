@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\HistoriaController;
 use App\Http\Controllers\Api\PacienteController;
+use App\Http\Controllers\Api\NutricionistaController;
 
 
 /*
@@ -16,7 +17,9 @@ use App\Http\Controllers\Api\PacienteController;
 |
 */
 
-
+Route::get('/test', function(){
+    dd("hola");
+});
 Route::post('register', 'App\Http\Controllers\UserController@register');
 Route::post('login', 'App\Http\Controllers\UserController@authenticate');
 
@@ -27,6 +30,8 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::post('paciente/historias',[HistoriaController::class,"historias"])->name("historias");
     Route::post('paciente/historia',[HistoriaController::class,"historia"])->name("historia");
     Route::post('pacientes',[PacienteController::class,"pacientes"])->name("pacientes");
+    Route::post('nutricionista',[NutricionistaController::class,"nutricionistaById"])->name("nutricionistaById");
+    Route::post('nutricionistas',[NutricionistaController::class,"nutricionistas"])->name("nutricionistas");
     
 
 });

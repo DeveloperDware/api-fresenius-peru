@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Paciente;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Usuario extends Model
 {
@@ -32,4 +33,13 @@ class Usuario extends Model
         "f_primera",
         
     ];
+
+    public function sedeInfo(){
+        return $this->hasOne(Sede::class, "id_sede",'sede');
+
+    }
+    public function pacientes(){
+        return $this->hasMany(Paciente::class, "id_nutricionista",'n_identificacion');
+
+    }
 }
