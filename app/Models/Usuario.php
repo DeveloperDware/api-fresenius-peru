@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Cita;
 use App\Models\Paciente;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -40,6 +41,10 @@ class Usuario extends Model
     }
     public function pacientes(){
         return $this->hasMany(Paciente::class, "id_nutricionista",'n_identificacion');
+
+    }
+    public function calendario(){
+        return $this->hasMany(Cita::class, "cn_nutricionista",'n_identificacion');
 
     }
 }

@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Paciente;
 use Illuminate\Http\Request;
+use App\Models\DocumentoCategoria;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CategoriaDoc;
 use App\Http\Resources\PacienteDetalle;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Validator;
 
 class PacienteController extends Controller
@@ -60,5 +63,33 @@ class PacienteController extends Controller
             "Results" => PacienteDetalle::collection($pacientes),
         ];
         return response()->json($response);
+    }
+
+    public function documentos(Request $request){
+        $validator = Validator::make($request->all(), [
+            'Id' => 'required|exists:paciente_hc,id',
+        ]);
+
+        if($validator->fails()){
+                return response()->json($validator->errors(), 400);
+        }
+       
+
+        $documentos = DocumentoCategoria::
+        whereHas('documentos.paciente', function (Builder $query) use ($request) {
+            $query->where('id', $request->get("Id"));
+        })
+        ->where([
+            "cdp_estado"=>'Activo',
+       
+        ])
+        ->get();
+
+        return response()->json(CategoriaDoc::collection($documentos));
+    }
+
+    public function documento(){
+        return response(file_get_contents("https://s03.s3c.es/imag/_v0/640x300/8/6/c/casa-simpsons.jpg"))
+        ->header( "Content-Type" , "image/png");
     }
 }

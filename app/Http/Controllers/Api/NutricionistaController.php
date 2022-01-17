@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Cita;
 use App\Models\Usuario;
 use Illuminate\Http\Request;
+use App\Http\Resources\Agenda;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Nutricionista;
 use Illuminate\Support\Facades\Validator;
@@ -19,11 +21,7 @@ class NutricionistaController extends Controller
         if($validator->fails()){
                 return response()->json($validator->errors(), 400);
         }
-        // select usuarios.nombres, usuarios.sede, usuarios.telefono, usuarios.correo, 
-        // sede_hc.nombre_sede, paciente_hc.id, paciente_hc.nombres, paciente_hc.apellidos 
-        // from usuarios left join sede_hc on usuarios.sede=sede_hc.id_sede 
-        // left join paciente_hc on paciente_hc.id_nutricionista=usuarios.n_identificacion 
-        // where usuarios.n_identificacion={id}
+     
         $usuarios = Usuario::where("n_identificacion",$request->get("Id"))->first();
 
         return response()->json(new Nutricionista($usuarios));
@@ -68,5 +66,23 @@ class NutricionistaController extends Controller
             "Results" => NutricionistaLista::collection($usuarios),
         ];
         return response()->json($response);
+    }
+
+    public function calendario(Request $request){
+        // select citas_nutricionista.*, usuarios.n_identificacion, usuarios.nombres as nombre_nutricionista, 
+        // paciente_hc.id, paciente_hc.nombres as paciente, sede_hc.* 
+        // from citas_nutricionista left join usuarios on citas_nutricionista.cn_nutricionista=usuarios.n_identificacion 
+        // left join sede_hc on usuarios.sede=sede_hc.id_sede 
+        // left join paciente_hc on citas_nutricionista.cn_paciente=paciente_hc.id 
+        // where citas_nutricionista.cn_nutricionista={Id} and citas_nutricionista.cn_estado='Agendada'
+
+        $citas = Usuario::select("usuarios.*")->join("citas_nutricionista","citas_nutricionista.cn_nutricionista","=","usuarios.n_identificacion")
+        ->where([
+            "cn_estado"=>"Agendada",
+            "cn_nutricionista"=>$request->get("Id")
+        ])->first();
+
+        return response()->json(new Agenda($citas));
+        
     }
 }
