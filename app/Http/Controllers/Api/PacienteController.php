@@ -27,8 +27,20 @@ class PacienteController extends Controller
     }
 
     public function pacientes(Request $request){
+        $validator = Validator::make($request->all(), [
+            'Page' => 'numeric',
+            "size"=>"numeric",
+            "direction"=>"in:ASC,DESC",
+            
+        ]);
+
+        if($validator->fails()){
+                return response()->json($validator->errors(), 400);
+        }
+
         $page = $request->get("Page") > 0 ? $request->get("Page"):1;
         $size = $request->get("size") > 0 ? $request->get("size")  : 50 ;
+        $request->merge(["page"=>$page]);
         $orderBy = $request->get("orderBy");
         $direction = $request->get("direction");
 
@@ -50,7 +62,7 @@ class PacienteController extends Controller
         if(key_exists($orderBy,$camposOrder)){
             $pacientes = $pacientes->orderBy($camposOrder[$orderBy],($direction ? $direction : "ASC" ));
         }
-        $pacientes = $pacientes->paginate($size,$page);
+        $pacientes = $pacientes->paginate($size);
         $paginate = $pacientes->toArray();
         $response = [
             "Page" => $page,
