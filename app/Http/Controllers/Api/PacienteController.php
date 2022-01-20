@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\DocumentoCategoria;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CategoriaDoc;
+use Illuminate\Support\Facades\Http;
 use App\Http\Resources\PacienteDetalle;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Validator;
@@ -85,23 +86,21 @@ class PacienteController extends Controller
         if($validator->fails()){
                 return response()->json($validator->errors(), 400);
         }
-       
-
         $documentos = DocumentoCategoria::
         whereHas('documentos.paciente', function (Builder $query) use ($request) {
             $query->where('id', $request->get("Id"));
         })
         ->where([
             "cdp_estado"=>'Activo',
-       
         ])
         ->get();
 
         return response()->json(CategoriaDoc::collection($documentos));
     }
 
-    public function documento(){
-        return response(file_get_contents("https://s03.s3c.es/imag/_v0/640x300/8/6/c/casa-simpsons.jpg"))
-        ->header( "Content-Type" , "image/png");
+    public function documento($name){
+        $response = Http::post('https://www.dwareltda.com/freseniusHC/admintranet/verArchivoPacientesAPI.php', ['na' => $name]);
+        dd($response);
+        return response(($response->body()));
     }
 }

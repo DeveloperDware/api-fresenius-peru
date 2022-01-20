@@ -20,6 +20,7 @@ class Documento extends JsonResource
             "Id" => 	$this->dp_id,
             "Title" => 	$this->dp_archivo,
             "Date" => $dp_freg->format("c"),
+            "Url"=> route("documento",["name"=>"as"])
         ];
     }
 }
