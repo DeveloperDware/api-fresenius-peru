@@ -92,9 +92,9 @@ class PacienteController extends Controller
         whereHas('documentos.paciente', function (Builder $query) use ($request) {
             $query->where('id', $request->get("Id"));
         })
-        ->where([
-            "cdp_estado"=>'Activo',
-        ])
+        ->whereHas('documentos', function (Builder $query) use ($request) {
+            $query->where('dp_estado', "Activo");
+        })
         ->get();
 
         return response()->json(CategoriaDoc::collection($documentos));
