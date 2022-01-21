@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
+use GuzzleHttp\Client;
 use App\Models\Paciente;
 use Illuminate\Http\Request;
+use App\Models\DocumentoPaciente;
 use App\Models\DocumentoCategoria;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CategoriaDoc;
@@ -98,11 +100,28 @@ class PacienteController extends Controller
         return response()->json(CategoriaDoc::collection($documentos));
     }
 
-    public function documento($name){
-        $response = Http::withHeaders([
-            'X-First' => 'foo',
-        ])->post('https://www.dwareltda.com/freseniusHC/admintranet/verArchivoPacientesAPI.php', ['na' => $name]);
-        
-        return response(($response->body()));
+    public function documento(Request $request){
+        $validator = Validator::make( $request->all(), [
+            'Id' => 'required|numeric|exists:docs_pacientes,dp_id',
+        ]);
+
+        if($validator->fails()){
+                return response()->json($validator->errors(), 400);
+        }
+        $client = new Client();
+        $doc = DocumentoPaciente::where("dp_id",$request->get("Id"))->first();
+        $response = $client->request("POST",'https://www.dwareltda.com/freseniusHC/admintranet/verArchivoPacientesAPI.php',
+         [
+               'form_params' =>
+                ['na' => $doc->dp_nombre]
+            ])
+         ;
+         $result = "";
+         while(!$response->getBody()->eof()){
+            $result .= $response->getBody()->read(8192);
+         }
+         
+         $filename = 'test.gif';
+         return response()->streamDownload(function () use ($result) {echo $result;}, $filename);
     }
 }

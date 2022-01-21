@@ -16,11 +16,13 @@ class Documento extends JsonResource
     public function toArray($request)
     {
         $dp_freg = new Carbon($this->dp_freg);
+        $archivo =explode(".",$this->dp_archivo);
         return [
             "Id" => 	$this->dp_id,
             "Title" => 	$this->dp_archivo,
             "Date" => $dp_freg->format("c"),
-            "Url"=> route("documento",["name"=>"as"])
+            "Url"=> "https://www.dwareltda.com/freseniusHC/admintranet/verArchivoPacientesAPI.php?na=$this->dp_archivo",
+            "ContentType"=>"application/".$archivo[count($archivo)-1]
         ];
     }
 }
