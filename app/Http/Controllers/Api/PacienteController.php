@@ -99,8 +99,10 @@ class PacienteController extends Controller
     }
 
     public function documento($name){
-        $response = Http::post('https://www.dwareltda.com/freseniusHC/admintranet/verArchivoPacientesAPI.php', ['na' => $name]);
-        dd($response);
+        $response = Http::withHeaders([
+            'X-First' => 'foo',
+        ])->post('https://www.dwareltda.com/freseniusHC/admintranet/verArchivoPacientesAPI.php', ['na' => $name]);
+        
         return response(($response->body()));
     }
 }
