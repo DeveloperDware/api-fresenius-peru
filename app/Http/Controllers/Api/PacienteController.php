@@ -121,7 +121,7 @@ class PacienteController extends Controller
             $result .= $response->getBody()->read(8192);
          }
          
-         $filename = $doc->dp_nombre;
+         $filename = $doc->dp_archivo;
          return response()->streamDownload(function () use ($result) {echo $result;}, $filename);
     }
 }
