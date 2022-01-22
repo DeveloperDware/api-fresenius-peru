@@ -20,10 +20,10 @@ use App\Http\Controllers\Api\NutricionistaController;
 Route::get('/test', function(){ dd("hola"); });
 Route::post('register', 'App\Http\Controllers\UserController@register');
 Route::post('login', 'App\Http\Controllers\UserController@authenticate');
-Route::get('paciente/documento/{name}',[PacienteController::class,"documento"])->name("documento");
 Route::group(['middleware' => ['jwt.verify']], function() {
-
+    
     //Route::post('user','UserController@getAuthenticatedUser');
+    Route::post('paciente/documento',[PacienteController::class,"documento"])->name("documento");
     Route::post('paciente',[PacienteController::class,"pacienteById"])->name("pacienteById");
     Route::post('paciente/documentos',[PacienteController::class,"documentos"])->name("documentos");
     Route::post('paciente/historias',[HistoriaController::class,"historias"])->name("historias");
