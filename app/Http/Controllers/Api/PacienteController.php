@@ -108,7 +108,7 @@ class PacienteController extends Controller
         if($validator->fails()){
                 return response()->json($validator->errors(), 400);
         }
-        $client = new Client();
+        $client = new Client(array( 'curl' => array( CURLOPT_SSL_VERIFYPEER => false, ), ));
         $doc = DocumentoPaciente::where("dp_id",$request->get("Id"))->first();
         $response = $client->request("POST",'https://www.dwareltda.com/freseniusHC/admintranet/verArchivoPacientesAPI.php',
          [
@@ -121,7 +121,7 @@ class PacienteController extends Controller
             $result .= $response->getBody()->read(8192);
          }
          
-         $filename = 'test.gif';
+         $filename = $doc->dp_nombre;
          return response()->streamDownload(function () use ($result) {echo $result;}, $filename);
     }
 }
