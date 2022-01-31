@@ -27,15 +27,16 @@ class HistoriasPaciente extends JsonResource
             "POTASSIUM" =>  "k"
         ];
         $llave = "imc";
+        $llave2 = "IMC";
         $type = request()->get("type");
         if(key_exists($type,$types)){
-            
+            $llave2 = $types[$type];
             $llave = strtolower($types[$type]);
         }
         return [
             "Id" => $this->paciente->id,
             "EventDate" => $this->fecha_historia,
-            "Description" => request()->get("type"),
+            "Description" => $llave2,
             "UnitMeasurement" => $this[$llave."_unidad"],
             "Value" =>  $this[$llave],
             "Minimun" => $this[$llave."_min"],

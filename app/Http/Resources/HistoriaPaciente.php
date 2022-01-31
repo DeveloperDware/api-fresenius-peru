@@ -27,12 +27,12 @@ class HistoriaPaciente extends JsonResource
         $llave = "ENERGY";
         $type = request()->get("type");
         if(key_exists($type,$types)){
-            $llave = strtolower($types[$type]);
+            $llave = $types[$type];
         }
         return [
             "Id" => $this->paciente->id,
-            "Type" => request()->get("type"),
-            "Limit" =>  $this[$llave],
+            "Type" => $llave,
+            "Limit" =>  $this[strtolower($llave)],
         ];
     }
 }
