@@ -31,9 +31,10 @@ class PacienteController extends Controller
 
     public function pacientes(Request $request){
         $validator = Validator::make($request->all(), [
-            'Page' => 'numeric',
-            "size"=>"numeric",
-            "direction"=>"in:ASC,DESC",
+            'Page' => 'nullable|numeric',
+            "size"=>"nullable|numeric",
+            "direction"=>"nullable|in:ASC,DESC",
+            "orderBy"=>"nullable|in:ID,NAME,CLINICNAME,EMAIL,PHONE,NUTRITIONIST",
             
         ]);
 
