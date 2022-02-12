@@ -80,20 +80,24 @@ class NutricionistaController extends Controller
     }
 
     public function calendario(Request $request){
-        // select citas_nutricionista.*, usuarios.n_identificacion, usuarios.nombres as nombre_nutricionista, 
-        // paciente_hc.id, paciente_hc.nombres as paciente, sede_hc.* 
-        // from citas_nutricionista left join usuarios on citas_nutricionista.cn_nutricionista=usuarios.n_identificacion 
-        // left join sede_hc on usuarios.sede=sede_hc.id_sede 
-        // left join paciente_hc on citas_nutricionista.cn_paciente=paciente_hc.id 
-        // where citas_nutricionista.cn_nutricionista={Id} and citas_nutricionista.cn_estado='Agendada'
+        $validator = Validator::make($request->all(), [
+            'Id' => 'required|exists:usuarios,n_identificacion',
+        ]);
 
-        $citas = Usuario::select("usuarios.*")->join("citas_nutricionista","citas_nutricionista.cn_nutricionista","=","usuarios.n_identificacion")
+        if($validator->fails()){
+                return response()->json($validator->errors(), 400);
+        }
+
+        $user = Usuario::with("calendario")->select("usuarios.*")
         ->where([
-            "cn_estado"=>"Agendada",
-            "cn_nutricionista"=>$request->get("Id")
-        ])->first();
+            "estado"=>"Activo",
+            "n_identificacion"=>$request->get("Id")
+        ])
+        ->first();
 
-        return response()->json(new Agenda($citas));
-        
+        if($user){
+            return response()->json(new Agenda($user));
+        }
+        return response()->json(["Id"=> ["The selected id is invalid."]], 400);
     }
 }
