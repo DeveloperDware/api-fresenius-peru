@@ -31,8 +31,10 @@ class NutricionistaController extends Controller
     public function nutricionistas(Request $request){
 
         $validator = Validator::make($request->all(), [
-            'Page' => 'numeric',
-            "size"=>"numeric"
+            'Page' => 'nullable|numeric',
+            "size"=>"nullable|numeric",
+            "direction"=>"nullable|in:ASC,DESC",
+            "orderBy"=>"nullable|in:ID,NAME,CLINICNAME,EMAIL,PHONE",
         ]);
 
         if($validator->fails()){
@@ -47,6 +49,10 @@ class NutricionistaController extends Controller
         $request->merge(["page"=>$page]);
         $usuarios = Usuario::select("usuarios.*")
         ->leftJoin('sede_hc', "usuarios.sede","=","sede_hc.id_sede")
+        ->where([
+            "usuarios.estado"=>"Activo",
+            "usuarios.area"=>Usuario::AREA_NUTRICION
+        ])
         ->where(function($sql) use($request){
             if($request->get("Name") != ""){
                 $sql->whereRaw(" usuarios.nombres like '%".$request->get("Name")."%'   ");
@@ -61,9 +67,13 @@ class NutricionistaController extends Controller
             "EMAIL" => "usuarios.correo", 
             "PHONE" => "usuarios.telefono"
         ];
+       
         if(key_exists($orderBy,$camposOrder)){
             $usuarios = $usuarios->orderBy($camposOrder[$orderBy],($direction ? $direction : "ASC" ));
+        }else{
+            $usuarios = $usuarios->orderBy("usuarios.nombres",($direction ? $direction : "ASC" ));
         }
+        
         $usuarios = $usuarios->paginate($size);
         $paginate = $usuarios->toArray();
         $response = [

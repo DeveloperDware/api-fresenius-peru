@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Usuario extends Model
 {
     use HasFactory;
+    const AREA_NUTRICION = "Nutricion";
     protected  $table = "usuarios";
     protected  $fillable = [
         "n_identificacion",
