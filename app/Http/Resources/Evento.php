@@ -19,7 +19,7 @@ class Evento extends JsonResource
         $cn_ffin = new Carbon($this->cn_ffin);
         return [
             "CodeFile"=>$this->cn_paciente,
-            "FullName"=>$this->paciente->nombres,
+            "FullName"=>$this->paciente->nombres." ".$this->paciente->apellidos,
             "Start"=>$cn_finicio->format("c"),
             "End"=>$cn_ffin->format("c"),
         ];
