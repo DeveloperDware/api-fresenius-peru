@@ -15,7 +15,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
 
-	dd("vivi");
-
-    return view('welcome');
+	 return view('welcome');
 });
