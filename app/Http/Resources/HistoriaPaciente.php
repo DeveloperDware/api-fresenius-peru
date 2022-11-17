@@ -22,10 +22,7 @@ class HistoriaPaciente extends JsonResource
             "LIPIDS" =>  "grasa_tgr" , 
             "CARBOHYDRATES" =>  "chos_tgr", 
             "WATER" =>   "liq_dia", 
-            "SODIUM" =>   "sal_dia",
-			"PHOSPHORUS" =>   "pe_fosforo",
-			"POTASSIUM" =>   "pe_potasio",
-			"URIA" =>   "uria"
+            "SODIUM" =>   "sal_dia"
         ];
         $llave = "ENERGY";
         $llave2 = "ENERGY";
