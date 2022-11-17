@@ -23,6 +23,7 @@ class HistoriaPaciente extends JsonResource
             "CARBOHYDRATES" =>  "chos_tgr", 
             "WATER" =>   "liq_dia", 
             "SODIUM" =>   "sal_dia"
+			
         ];
         $llave = "ENERGY";
         $llave2 = "ENERGY";
