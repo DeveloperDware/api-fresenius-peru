@@ -25,8 +25,7 @@ class HistoriasPaciente extends JsonResource
             "UREA" => "uria", 
             "PHOSPHORUS" =>  "p", 
             "POTASSIUM" =>  "k"
-			
-        ];
+		 ];
         $llave = "imc";
         $llave2 = "IMC";
         $type = request()->get("type");
